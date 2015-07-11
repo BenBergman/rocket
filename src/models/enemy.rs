@@ -7,15 +7,19 @@ use opengl_graphics::GlGraphics;
 
 /// Enemies follow the player in order to cause a collision and let him explode 
 pub struct Enemy {
-    vector: Vector
+    vector: Vector,
+    speed: f64,
 }
 
 derive_position_direction!(Enemy);
 
 impl Enemy {
     /// Create a enemy with the given vector
-    pub fn new(vector: Vector) -> Enemy {
-        Enemy { vector: vector }
+    pub fn new(vector: Vector, speed: f64) -> Enemy {
+        Enemy {
+            vector: vector,
+            speed: speed,
+        }
     }
 
     /// Draw the enemy
@@ -26,10 +30,11 @@ impl Enemy {
     }
 
     /// Update the enemy
-    pub fn update(&mut self, speed: f64, player_position: Point) {
+    pub fn update(&mut self, dt: f64, player_position: Point) {
         // Point to the player
         self.point_to(player_position);
-        self.advance(speed);
+        let speed = self.speed;
+        self.advance(dt * speed);
     }
 }
 

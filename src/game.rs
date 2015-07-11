@@ -8,7 +8,7 @@ use itertools;
 use opengl_graphics::GlGraphics;
 use opengl_graphics::glyph_cache::GlyphCache;
 use piston::input::Key;
-use rand::{self, ThreadRng};
+use rand::{self, ThreadRng, Rng};
 
 use drawing::{color, Point, Size};
 use models::{Bullet, Enemy, Particle, Vector, World};
@@ -158,13 +158,13 @@ impl Game {
         // Spawn enemies at random locations
         if self.timers.current_time - self.timers.last_spawned_enemy > 1.0 {
             self.timers.last_spawned_enemy = self.timers.current_time;
-            let new_enemy = Enemy::new(Vector::random(&mut self.rng, self.world.size.clone()));
+            let new_enemy = Enemy::new(Vector::random(&mut self.rng, self.world.size.clone()), self.rng.gen_range(0.0, 200.0));
             self.world.enemies.push(new_enemy);
         }
 
         // Move enemies in the player's direction
         for enemy in &mut self.world.enemies {
-            enemy.update(dt * 100.0, self.world.player.position());
+            enemy.update(dt, self.world.player.position());
         }
 
         self.handle_player_collisions();
